@@ -256,6 +256,9 @@ def test_termux(mocker):
     assert str(tz) == "***REMOVED***"
 
 
+@pytest.mark.skipif(
+    platform.system() == "Windows", reason="Symbolic links are not available on Windows"
+)
 def test_conflicting():
     with pytest.raises(ZoneInfoNotFoundError) as excinfo:
         tz = tzlocal.unix._get_localzone(_root=tz_path("conflicting"))
@@ -265,6 +268,7 @@ def test_conflicting():
     assert "America/New_York" in message
     assert "Europe/Warsaw" in message
     assert "***REMOVED***" in message
+    assert "localtime is a symlink to: Africa/Harare" in message
 
 
 def test_noconflict():
