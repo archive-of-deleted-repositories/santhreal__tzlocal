@@ -86,11 +86,6 @@ def _tz_from_env(tzenv=None):
         tzenv = tzenv[1:]
 
     # TZ specifies a file (directories must not be opened as tzfiles)
-    if os.path.isabs(tzenv) and os.path.isdir(tzenv):
-        raise zoneinfo.ZoneInfoNotFoundError(
-            f"tzlocal() does not support non-zoneinfo timezones like {tzenv}. \n"
-            "Please use a timezone in the form of Continent/City"
-        )
     if os.path.isabs(tzenv) and os.path.isfile(tzenv):
         # Try to see if we can figure out the name
         tzname = _tz_name_from_env(tzenv)
