@@ -55,7 +55,7 @@ def _tz_name_from_env(tzenv=None):
         # Yup, it's a timezone
         return tzenv
 
-    if os.path.isabs(tzenv) and os.path.exists(tzenv):
+    if os.path.isabs(tzenv) and os.path.isfile(tzenv):
         # It's a file specification, expand it, if possible
         parts = os.path.realpath(tzenv).split(os.sep)
 
@@ -86,7 +86,7 @@ def _tz_from_env(tzenv=None):
         tzenv = tzenv[1:]
 
     # TZ specifies a file
-    if os.path.isabs(tzenv) and os.path.exists(tzenv):
+    if os.path.isabs(tzenv) and os.path.isfile(tzenv):
         # Try to see if we can figure out the name
         tzname = _tz_name_from_env(tzenv)
         if not tzname:
@@ -100,7 +100,7 @@ def _tz_from_env(tzenv=None):
         tz = zoneinfo.ZoneInfo(tzenv)
         # That worked, so we return this:
         return tz
-    except zoneinfo.ZoneInfoNotFoundError:
+    except (zoneinfo.ZoneInfoNotFoundError, ValueError):
         # Nope, it's something like "PST4DST" etc, we can't handle that.
         raise zoneinfo.ZoneInfoNotFoundError(
             f"tzlocal() does not support non-zoneinfo timezones like {tzenv}. \n"

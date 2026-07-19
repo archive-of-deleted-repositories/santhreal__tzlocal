@@ -57,6 +57,10 @@ def test_env(monkeypatch):
     # With a zone that doesn't exist, raises error
     pytest.raises(ZoneInfoNotFoundError, tzlocal.utils._tz_from_env, "Just Nonsense")
 
+    # Directory paths are not supported in the TZ environment.
+    pytest.raises(ZoneInfoNotFoundError, tzlocal.utils._tz_from_env, ":/")
+    pytest.raises(ZoneInfoNotFoundError, tzlocal.utils._tz_from_env, "/")
+
 
 def test_timezone():
     # Most versions of Ubuntu
